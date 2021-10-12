@@ -31,4 +31,19 @@ def brute_find(wights, max_weight, values):
     print(backpack)
     print(winner)
 
+def heuristic_find(weights, max_weight, values):
+    ratios = [values[n]/weights[n] for n in range(len(weights))]
+    new_weights = [elem for _, elem in sorted(zip(ratios, weights), reverse=True)]
+    new_values = [elem for _, elem in sorted(zip(ratios, values), reverse=True)]
+    backpack = []
+    id = 0
+    while sum(i[0] for i in backpack) < max_weight:
+        backpack.append((new_weights[id], new_values[id]))
+        id += 1
+    if sum(i[0] for i in backpack) > max_weight:
+        backpack.pop()
+    print(backpack)
+
+
 brute_find(weights, max_weight, values)
+heuristic_find(weights, max_weight, values)
