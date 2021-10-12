@@ -1,0 +1,15 @@
+1. Czy uzyskano takie same rozwiązania?
+
+Nie, rozwiązanie za pomocą heurystyki nie jest optymalne.
+
+2. Jakie wnioski można z tego wyciągnąć?
+
+Rozwiązanie za pomocą heurystyki jest szybsze (nie musimy sprawdzać wszystkich kombinacji). Możemy uzyskać za jego pomocą najlepsze rozwiązanie, jednak nie w każdym przypadku.
+
+3. Jak dużą instancję problemu (liczba przedmiotów) da się rozwiązać w około minutę metodą zachłanną?
+
+W moim przypadku 24 przedmioty.
+
+4. Jak bardzo wydłuży obliczenia dodanie jeszcze jednego przedmiotu?
+
+W moim przypadku o minutę.
