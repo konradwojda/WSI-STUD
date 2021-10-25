@@ -1,0 +1,21 @@
+1. Jak wartość parametru beta wpływa na szybkość dojścia do optimum i zachowanie algorytmu?
+
+Przy zbyt małym beta potrzebujemy znacznie większego czasu aby dojść do optimum, ale algorytm staje się dokładniejszy.
+Wraz z zwiększaniem parametru algorytm wykonuje większe skoki, co zmniejsza czas, ale przy zbyt dużym beta
+algorytm może "przeskoczyć" optimum i w konsekwencji w ogóle go nie znaleźć.
+
+2. Zalety/wady algorytmu?
+
+Wady:
+- musimy dobrze dobrać parametr beta
+- nie zawsze podąża dokładnie w kierunku optimum
+
+Zalety:
+- prosta implementacja
+- może być łatwo zaaplikowany dla wielowymiarowych funkcji
+
+3. Wnioski
+
+Jest to prosty i łatwy w implementacji algorytm który z powodzeniem pomaga w znalezieniu optimum,
+lecz wymaga on bardzo dokładnego wyznaczenia parametru beta. W przeciwnym przypadku możemy dostać wynik
+odwrotny od zakładanego. W ogólnym przypadku lepiej użyć np. metody Newtona, która mimo większej złożoności, jest dokładniejsza.
