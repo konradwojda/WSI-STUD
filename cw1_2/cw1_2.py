@@ -32,7 +32,8 @@ def steepest_ascent(fun, b, x: np.array, n):
     prevPoint = point
     path = [point]
     for _ in range(n):
-        point = point + (b * gradient(fun, point))
+        # point = point + (b * gradient(fun, point))
+        point = point + (b * nd.Gradient(fun)(point))
         # print(point)
         # print(fun(point))
         prevPoint = point
@@ -43,6 +44,7 @@ def steepest_ascent(fun, b, x: np.array, n):
 def plot_steepest_ascent(fun, beta, n):
     starting_point = np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=DIMENSIONALITY)
     q = fun(starting_point)
+    print(starting_point)
     print('q(x) = %.6f' %q)
     points = steepest_ascent(fun, beta, starting_point, n)
     dq = fun(points[-1])
@@ -52,7 +54,7 @@ def plot_steepest_ascent(fun, beta, n):
 
 
 if __name__ == "__main__":
-    # plot_steepest_ascent(f1, 0.00000001, 40)
+    plot_steepest_ascent(f1, 0.00000001, 40)
     # plot_steepest_ascent(f2, 0.5, 400)
     # plot_steepest_ascent(f3, 0.00005, 40)
-    plot_steepest_ascent(booth, 0.05, 40)
+    # plot_steepest_ascent(booth, 0.05, 40)
