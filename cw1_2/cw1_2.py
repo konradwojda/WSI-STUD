@@ -54,7 +54,7 @@ def plot_steepest_ascent(fun, beta, n):
 
 
 if __name__ == "__main__":
-    plot_steepest_ascent(f1, 0.00000001, 40)
-    # plot_steepest_ascent(f2, 0.5, 400)
-    # plot_steepest_ascent(f3, 0.00005, 40)
-    # plot_steepest_ascent(booth, 0.05, 40)
+    plot_steepest_ascent(f1, -0.00000001, 40)
+    # plot_steepest_ascent(f2, -0.5, 400)
+    # plot_steepest_ascent(f3, -0.00005, 40)
+    # plot_steepest_ascent(booth, -0.05, 40)
