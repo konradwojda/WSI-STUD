@@ -1,10 +1,10 @@
-# weights = [8, 3, 5, 2]  # waga przedmiotów
-# max_weight = 9  # maksymalna waga plecaka
-# values = [16, 8, 9, 6]  # wartość przedmiotów
+weights = [8, 3, 5, 2]  # waga przedmiotów
+max_weight = 9  # maksymalna waga plecaka
+values = [16, 8, 9, 6]  # wartość przedmiotów
 
-weights = [i for i in range(25)]
-max_weight = 9
-values = [i for i in range(25)]
+# weights = [i for i in range(25)]
+# max_weight = 9
+# values = [i for i in range(25)]
 
 def brute_find(wights, max_weight, values):
     binary = []
@@ -30,7 +30,7 @@ def brute_find(wights, max_weight, values):
             for item in temp_backpack:
                 backpack.append(item)
         temp_backpack.clear()
-
+    print("Brute find result (weight, value):")
     print(backpack)
     print(winner)
 
@@ -45,8 +45,9 @@ def heuristic_find(weights, max_weight, values):
         id += 1
     if sum(i[0] for i in backpack) > max_weight:
         backpack.pop()
+    print("Heuristic find result (weight, value):")
     print(backpack)
 
 
 brute_find(weights, max_weight, values)
-# heuristic_find(weights, max_weight, values)
+heuristic_find(weights, max_weight, values)
