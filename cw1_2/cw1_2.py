@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 from cec2017.functions import f1, f2, f3
 import numdifftools as nd
 
+from plot import make_2d_plot
+
+UPPER_BOUND = 100
+DIMENSIONALITY = 2
+
 def partial_derivative(f, x: np.array, n: int):
     dx = 1e-6
     new = x.copy()
@@ -13,45 +18,41 @@ def partial_derivative(f, x: np.array, n: int):
 def gradient(f, x: np.array):
     return np.array([partial_derivative(f, x, var) for var in range(x.size)])
 
+def booth(x: np.array):
+    return (x[0] + 2*x[1] - 7)**2 + (2*x[0] + x[1] - 5)**2
+
 """
 f - function
 b - learning rate (beta)
 x - starting point
 n - number of iterations
 """
-def steepest_ascent(f, b, x: np.array, n):
-    dx = x.copy()
+def steepest_ascent(fun, b, x: np.array, n):
+    point = x
+    prevPoint = point
+    path = [point]
     for _ in range(n):
-        d = gradient(f, dx)
-        dx2 = dx.copy()
-        dx += b*d
-        plt.arrow(dx2[0], dx2[1], dx[0], dx[1], head_width=5, head_length=10, fc='k', ec='k')
-        print(dx)
-    print(f1(dx))
+        point = point + (b * gradient(fun, point))
+        # print(point)
+        # print(fun(point))
+        prevPoint = point
+        path.append(point)
+    # print(path)
+    return path
+
+def plot_steepest_ascent(fun, beta, n):
+    starting_point = np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=DIMENSIONALITY)
+    q = fun(starting_point)
+    print('q(x) = %.6f' %q)
+    points = steepest_ascent(fun, beta, starting_point, n)
+    dq = fun(points[-1])
+    print('q(x) = %.6f' %dq)
+    make_2d_plot(fun, points)
 
 
-MAX_X = 100
-PLOT_STEP = 0.1
 
-x_arr = np.arange(-MAX_X, MAX_X, PLOT_STEP)
-y_arr = np.arange(-MAX_X, MAX_X, PLOT_STEP)
-X, Y = np.meshgrid(x_arr, y_arr)
-Z = np.empty(X.shape)
-
-f=f1
-
-for i in range(X.shape[0]):
-    for j in range(X.shape[1]):
-        Z[i, j] = f(np.array([X[i, j], Y[i, j]]))
-
-cp = plt.contour(X, Y, Z, 20)
-
-x = np.random.uniform(-100, 100, size=2)
-steepest_ascent(f1, 0.1, x, 5)
-# plt.arrow(0, 0, 50, 50, head_width=5, head_length=10, fc='k', ec='k')
-plt.show()
-# print(partial_derivative(f1, np.array([100.0,110.0]), 1))
-# print(gradient(f1, np.array([0.0,0.0])))
-# print(nd.Gradient(f1)([0.0, 0.0]))
-#print(gradient(f1, np.array([1.44284127e+14, 3.18767263e+14])))
-# steepest_ascent(f1, 0.1, np.array([10.0, 10.0]), 100)
+if __name__ == "__main__":
+    # plot_steepest_ascent(f1, 0.00000001, 40)
+    # plot_steepest_ascent(f2, 0.5, 400)
+    # plot_steepest_ascent(f3, 0.00005, 40)
+    plot_steepest_ascent(booth, 0.05, 40)
