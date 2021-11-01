@@ -25,7 +25,7 @@ def rating(fun, population):
     return [fun(member) for member in population]
 
 def find_best(population, rating):
-    return population[min(rating)]
+    return sorted(zip(rating, population))[0][1]
 
 def reproduction(population, rating):
     new_population = []
@@ -34,6 +34,7 @@ def reproduction(population, rating):
         second = randint(0, population.size)
         new_population.append(population[first] if rating[first] >= rating[second] else second)
     return np.array(new_population)
+
 def mutation(population, mutation_factor):
     pass
 
