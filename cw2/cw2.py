@@ -8,10 +8,10 @@ def evolutionary_algorithm(fun, start_population, mutation_factor, elite_size, t
     curr_best = find_best(start_population, ratings)
     population = start_population.copy()
     while not stop(t, t_max, population, curr_best):
-        reproducted = reproduction(population, ratings)
+        reproduced = reproduction(population, ratings)
         mutated = mutation(reproduced, mutation_factor)
         new_ratings = rating(fun, mutated)
-        temp_best = find_best(fun, mutated)
+        temp_best = find_best(mutated, new_ratings)
         if fun(temp_best) <= fun(curr_best):
             curr_best = temp_best.copy()
         population = elite_succession(population, mutated, ratings, new_ratings, 2)
@@ -30,14 +30,14 @@ def find_best(population, rating):
 
 def reproduction(population, rating):
     new_population = []
-    for _ in range(population.size):
-        first = randint(0, population.size)
-        second = randint(0, population.size)
+    for _ in range(len(population)):
+        first = randint(0, len(population) - 1)
+        second = randint(0, len(population) - 1)
         new_population.append(population[first] if rating[first] >= rating[second] else population[second])
-    return np.array(new_population)
+    return new_population
 
 def mutation(population, mutation_factor):
-    return np.array([np.random.normal(member, mutation_factor) for member in population])
+    return [np.random.normal(member, mutation_factor) for member in population]
 
 def elite_succession(population, modified_population, rating, mod_rating, elite_size):
         sorted_members = sorted(zip(rating, population))
@@ -46,4 +46,7 @@ def elite_succession(population, modified_population, rating, mod_rating, elite_
             sorted_modified_members.pop()
         for n in range(elite_size):
             sorted_modified_members.append(sorted_members[n])
-        return np.array([member[1] for member in sorted_modified_members])
+        return [member[1] for member in sorted_modified_members]
+
+start_population = [np.array([1.0, 1.0]), np.array([5.0, 23.0]), np.array([43.0, 56.0])]
+print(evolutionary_algorithm(f4, start_population, 0.01, 2, 10000))
