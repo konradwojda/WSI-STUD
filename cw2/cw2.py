@@ -10,11 +10,12 @@ def evolutionary_algorithm(fun, start_population, mutation_factor, elite_size, t
     while not stop(t, t_max, population, curr_best):
         reproducted = reproduction(population, ratings)
         mutated = mutation(reproduced, mutation_factor)
-        ratings = rating(fun, mutated)
+        new_ratings = rating(fun, mutated)
         temp_best = find_best(fun, mutated)
         if fun(temp_best) <= fun(curr_best):
             curr_best = temp_best.copy()
-        population = elite_succession(population, mutated, ratings, 2)
+        population = elite_succession(population, mutated, ratings, new_ratings, 2)
+        ratings = new_ratings.copy()
         t += 1
     return curr_best
 
@@ -32,11 +33,17 @@ def reproduction(population, rating):
     for _ in range(population.size):
         first = randint(0, population.size)
         second = randint(0, population.size)
-        new_population.append(population[first] if rating[first] >= rating[second] else second)
+        new_population.append(population[first] if rating[first] >= rating[second] else population[second])
     return np.array(new_population)
 
 def mutation(population, mutation_factor):
-    pass
+    return np.array([np.random.normal(member, mutation_factor) for member in population])
 
-def elite_succession(population, modified_population, rating, elite_size):
-    pass
+def elite_succession(population, modified_population, rating, mod_rating, elite_size):
+        sorted_members = sorted(zip(rating, population))
+        sorted_modified_members = sorted(zip(mod_rating, modified_population))
+        for _ in range(elite_size):
+            sorted_modified_members.pop()
+        for n in range(elite_size):
+            sorted_modified_members.append(sorted_members[n])
+        return sorted_modified_members  #not sorted anymore
