@@ -46,4 +46,4 @@ def elite_succession(population, modified_population, rating, mod_rating, elite_
             sorted_modified_members.pop()
         for n in range(elite_size):
             sorted_modified_members.append(sorted_members[n])
-        return sorted_modified_members  #not sorted anymore
+        return [member[1] for member in sorted_modified_members]
