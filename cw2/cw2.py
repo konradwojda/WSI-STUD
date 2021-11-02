@@ -48,5 +48,10 @@ def elite_succession(population, modified_population, rating, mod_rating, elite_
             sorted_modified_members.append(sorted_members[n])
         return [member[1] for member in sorted_modified_members]
 
-start_population = [np.array([1.0, 1.0]), np.array([5.0, 23.0]), np.array([43.0, 56.0])]
-print(evolutionary_algorithm(f4, start_population, 0.01, 2, 10000))
+if __name__ == "__main__":
+    UPPER_BOUND = 100
+    pop = []
+    for _ in range(20):
+        pop.append(np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=2))
+    # start_population = [np.array([1.0, 1.0]), np.array([5.0, 23.0]), np.array([43.0, 56.0])]
+    print(f4(evolutionary_algorithm(f4, pop, 0.1, 3, 10000)))
