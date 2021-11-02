@@ -24,7 +24,7 @@ def make_2d_plot(fun, points):
 
     for i in range(len(points)-1):
         delta = points[i+1] - points[i]
-        plt.arrow(points[i][0], points[i][1], delta[0], delta[1], head_width=MAX_POINT * 0.015, head_length=MAX_POINT * 0.015, fc='k', ec='k')
+        plt.arrow(points[i][0], points[i][1], delta[0], delta[1], head_width=MAX_POINT * 0.02, head_length=MAX_POINT * 0.02, fc='k', ec='k')
 
 
     plt.show()
