@@ -41,17 +41,18 @@ def mutation(population, mutation_factor):
 
 def elite_succession(population, modified_population, rating, mod_rating, elite_size):
         sorted_members = sorted(zip(rating, population))
-        sorted_modified_members = sorted(zip(mod_rating, modified_population))
+        elite = sorted_members[:elite_size]
+        new_population = list(zip(mod_rating, modified_population)) + elite
+        new_population.sort()
         for _ in range(elite_size):
-            sorted_modified_members.pop()
-        for n in range(elite_size):
-            sorted_modified_members.append(sorted_members[n])
-        return [member[1] for member in sorted_modified_members]
+            new_population.pop()
+        return [member[1] for member in new_population]
 
 if __name__ == "__main__":
     UPPER_BOUND = 100
-    pop = []
-    for _ in range(20):
-        pop.append(np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=2))
-    # start_population = [np.array([1.0, 1.0]), np.array([5.0, 23.0]), np.array([43.0, 56.0])]
-    print(f4(evolutionary_algorithm(f4, pop, 0.1, 3, 10000)))
+    for _ in range(5):
+        pop = []
+        for _ in range(20):
+            pop.append(np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=2))
+        # start_population = [np.array([1.0, 1.0]), np.array([5.0, 23.0]), np.array([43.0, 56.0])]
+        print(f4(evolutionary_algorithm(f4, pop, 0.1, 5, 10000)))
