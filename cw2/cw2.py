@@ -39,7 +39,7 @@ def reproduction(population, rating):
     for _ in range(len(population)):
         first = randint(0, len(population) - 1)
         second = randint(0, len(population) - 1)
-        new_population.append(population[first] if rating[first] >= rating[second] else population[second])
+        new_population.append(population[first] if rating[first] <= rating[second] else population[second])
     return new_population
 
 def mutation(population, mutation_factor):
@@ -50,21 +50,18 @@ def elite_succession(population, modified_population, rating, mod_rating, elite_
         elite = sorted_members[:elite_size]
         new_population = list(zip(mod_rating, modified_population)) + elite
         new_population.sort()
-        # new_population = new_population[:-elite_size]
-        # for _ in range(elite_size):
-        #     new_population.pop()
         return new_population[:-elite_size]
 
 if __name__ == "__main__":
     results = []
     print("min\t|\tavg\t|\tstdev\t|\tmax")
-    # for X in [10, 20, 30, 50, 80, 100]:
+    for X in [10, 20, 30, 50, 80, 100]:
     # for X in [1, 2, 3, 5, 10, 15, 20]:
-    for X in [0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0]:
+    # for X in [0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0]:
         for _ in range(25):
             pop = []
-            for _ in range(20):
+            for _ in range(X):
                 pop.append(np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=2))
-            results.append(f4(evolutionary_algorithm(f4, pop, X, 3)))
+            results.append(f4(evolutionary_algorithm(f4, pop, 1.0, 3)))
         print(str(X) + " | " + str(min(results)) + " | " + str((sum(results) / len(results))) + " | " + str(stdev(results)) + " | " + str(max(results)))
         results = []
