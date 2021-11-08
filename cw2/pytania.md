@@ -35,7 +35,9 @@ Z wyników można wywnioskować, że w tym przypadku najlepiej było stosować m
 | 50.0         | 400.0007519616276  | 400.00447562626766 | 0.004328375217188277   | 400.016593685632   |
 
 ### Wnioski:
-Wraz z większeniem siły mutacji algorytm lepiej eksploruje przestrzeń jednak przy dobraniu zbyt dużego współczynnika
+Zbyt mały współczynnik mutacji powoduje, że algorytm ogranicza się do znalezionych już optimów i nie ma większych szans na znalezienie kolejnych.
+Za duży jednak powoduje, że algorytm eksploruje przestrzeń i nie znajduje dokładnego optimum.
+Dla tego problemu najlepiej sprawuje się współczynnik mutacji z zakresu 0.5 - 2.0.
 
 # Wpływ rozmiaru elity
 
@@ -50,4 +52,4 @@ Wraz z większeniem siły mutacji algorytm lepiej eksploruje przestrzeń jednak 
 | 20            | 400.00000001272684 | 400.0000017861421  | 2.3216469138214464e-06 | 400.00000799720436 |
 
 ### Wnioski:
-coścoścoś
+Ten parametr najmniej wpływa na wyniki. Jednak najlepsze wyniki uzyskałem dla elity równej od 3 do 10.
