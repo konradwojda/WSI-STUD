@@ -1,13 +1,17 @@
 from cec2017.functions import f4
 import numpy as np
 from random import randint
+from statistics import stdev
 
-def evolutionary_algorithm(fun, start_population, mutation_factor, elite_size, t_max):
+UPPER_BOUND = 100
+T_MAX = 10000
+
+def evolutionary_algorithm(fun, start_population, mutation_factor, elite_size):
     t = 0
     ratings = rating(fun, start_population)
     curr_best = find_best(start_population, ratings)
     population = start_population.copy()
-    while not stop(t, t_max, population, curr_best):
+    while not stop(t, population, curr_best):
         reproduced = reproduction(population, ratings)
         mutated = mutation(reproduced, mutation_factor)
         new_ratings = rating(fun, mutated)
@@ -19,8 +23,8 @@ def evolutionary_algorithm(fun, start_population, mutation_factor, elite_size, t
         t += 1
     return curr_best
 
-def stop(t, t_max, population, value):
-    return (t >= t_max)
+def stop(t, population, value):
+    return (t >= (T_MAX / len(population)) - 1)
 
 def rating(fun, population):
     return [fun(member) for member in population]
@@ -50,9 +54,16 @@ def elite_succession(population, modified_population, rating, mod_rating, elite_
 
 if __name__ == "__main__":
     UPPER_BOUND = 100
-    for _ in range(5):
-        pop = []
-        for _ in range(20):
-            pop.append(np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=2))
-        # start_population = [np.array([1.0, 1.0]), np.array([5.0, 23.0]), np.array([43.0, 56.0])]
-        print(f4(evolutionary_algorithm(f4, pop, 0.1, 5, 10000)))
+    # X = 20
+    results = []
+    print("min\t|\tavg\t|\tstdev\t|\tmax")
+    for X in [1, 2, 3, 5, 10, 20]:
+        for _ in range(25):
+            pop = []
+            for _ in range(20):
+                pop.append(np.random.uniform(-UPPER_BOUND, UPPER_BOUND, size=2))
+            results.append(f4(evolutionary_algorithm(f4, pop, 1.0, X)))
+        # print("Population size: " + str(X))
+        print(str(X) + " | " + str(min(results)) + " | " + str((sum(results) / len(results))) + " | " + str(stdev(results)) + " | " + str(max(results)))
+        # X += 5
+        results = []
