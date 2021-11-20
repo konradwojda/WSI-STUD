@@ -323,9 +323,6 @@ class Board:
 
     # ToDo
     def evaluate(self, is_blue_turn):
-        return self.eval_for_blue()
-
-    def eval_for_blue(self):
         blue_eval = 0
         white_eval = 0
         for row in range(BOARD_WIDTH):
@@ -341,6 +338,48 @@ class Board:
                             white_eval += 10
                         else:
                             white_eval += 1
+        return blue_eval - white_eval
+
+    def evaluate_ver2(self, is_blue_turn):
+        blue_eval = 0
+        white_eval = 0
+        for row in range(BOARD_WIDTH):
+            for col in range((row+1) % 2, BOARD_WIDTH, 2):
+                if not self.board[row][col].is_empty():
+                    if self.board[row][col].is_blue():
+                        if self.board[row][col].is_king():
+                            blue_eval += 10
+                        else:
+                            if row < BOARD_WIDTH / 2:
+                                blue_eval += 5
+                            else:
+                                blue_eval += 7
+                    elif self.board[row][col].is_white():
+                        if self.board[row][col].is_king():
+                            white_eval += 10
+                        else:
+                            if row > BOARD_WIDTH / 2:
+                                white_eval += 5
+                            else:
+                                white_eval += 7
+        return blue_eval - white_eval
+
+    def evaluate_ver3(self, is_blue_turn):
+        blue_eval = 0
+        white_eval = 0
+        for row in range(BOARD_WIDTH):
+            for col in range((row+1) % 2, BOARD_WIDTH, 2):
+                if not self.board[row][col].is_empty():
+                    if self.board[row][col].is_blue():
+                        if self.board[row][col].is_king():
+                            blue_eval += 10
+                        else:
+                            blue_eval += 5 + row
+                    elif self.board[row][col].is_white():
+                        if self.board[row][col].is_king():
+                            white_eval += 10
+                        else:
+                            white_eval += 5 + row
         return blue_eval - white_eval
 
     def get_possible_moves(self, is_blue_turn):
@@ -472,9 +511,9 @@ def minimax_a_b_recurr(board, depth, move_max, a, b, color):
     moves = board.get_possible_moves(not board.white_turn)
     if len(moves) == 0 or depth == 0:
         if color == 'B':
-            return board.evaluate(not board.white_turn)
+            return board.evaluate_ver2(not board.white_turn)
         elif color == 'W':
-            return -board.evaluate(not board.white_turn)
+            return -board.evaluate_ver2(not board.white_turn)
     if move_max:
         for move in moves:
             new_board = deepcopy(board)
@@ -506,10 +545,10 @@ def main():
         if game.board.end():
             is_running = False
 
-            if(game.board.blue_fig_left == 0):
+            if(game.board.blue_fig_left == 0 or len(game.board.get_possible_moves(True)) == 0):
                 print("White won")
                 break
-            elif(game.board.white_fig_left == 0):
+            elif(game.board.white_fig_left == 0 or len(game.board.get_possible_moves(False)) == 0):
                 print("Blue won")
                 break
             # break  # przydalby sie jakiś komunikat kto wygrał zamiast break
@@ -532,41 +571,47 @@ def main():
 
     pygame.quit()
 
-# def main_ai_ai():
-#     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-#     is_running = True
-#     clock = pygame.time.Clock()
-#     game = Game(window)
+def main_ai_ai():
+    window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+    is_running = True
+    clock = pygame.time.Clock()
+    game = Game(window)
 
-#     while is_running:
-#         clock.tick(FPS)
+    while is_running:
+        iter = 0
+        clock.tick(FPS)
 
-#         if game.board.end():
-#             is_running = False
+        if game.board.end() or iter > 200:
+            is_running = False
 
-#             if(game.board.blue_fig_left == 0):
-#                 print("White won")
-#                 break
-#             elif(game.board.white_fig_left == 0):
-#                 print("Blue won")
-#                 break
-#             # break  # przydalby sie jakiś komunikat kto wygrał zamiast break
-#         if game.board.white_turn:
-#             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'W')
-#             game.board.make_ai_move(move)
-#         else:
-#             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'B')
-#             game.board.make_ai_move(move)
-#         # for event in pygame.event.get():
-#         #     if event.type == pygame.QUIT:
-#         #         is_running = False
+            if iter > 200:
+                print("Draw")
+                break
 
-#         #     if event.type == pygame.MOUSEBUTTONDOWN:
-#         #         pos = pygame.mouse.get_pos()
-#         #         game.clicked_at(pos)
+            if(game.board.blue_fig_left == 0 or len(game.board.get_possible_moves(True)) == 0):
+                print("White won")
+                break
+            elif(game.board.white_fig_left == 0 or len(game.board.get_possible_moves(False)) == 0):
+                print("Blue won")
+                break
+            # break  # przydalby sie jakiś komunikat kto wygrał zamiast break
+        if game.board.white_turn:
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'W')
+            game.board.make_ai_move(move)
+        else:
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'B')
+            game.board.make_ai_move(move)
+        # for event in pygame.event.get():
+        #     if event.type == pygame.QUIT:
+        #         is_running = False
 
-#         game.update()
+        #     if event.type == pygame.MOUSEBUTTONDOWN:
+        #         pos = pygame.mouse.get_pos()
+        #         game.clicked_at(pos)
 
-#     pygame.quit()
+        iter += 1
+        game.update()
 
-main()
+    pygame.quit()
+
+main_ai_ai()
