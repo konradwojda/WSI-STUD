@@ -463,6 +463,7 @@ def minimax_a_b(board, depth, color):
         moves_grades.append(minimax_a_b_recurr(new_board, depth - 1, True, -inf, +inf, color))
     zipped_moves = list(zip(moves_grades, moves))
     print([elem[0] for elem in zipped_moves])
+    # wywala sie jesli nie ma mozliwych ruchow
     return max(zipped_moves, key= lambda x: x[0])[1]
 
 
@@ -493,44 +494,6 @@ def minimax_a_b_recurr(board, depth, move_max, a, b, color):
 
 
 
-# def main():
-#     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-#     is_running = True
-#     clock = pygame.time.Clock()
-#     game = Game(window)
-
-#     while is_running:
-#         clock.tick(FPS)
-
-#         if game.board.end():
-#             is_running = False
-
-#             if(game.board.blue_fig_left == 0):
-#                 print("White won")
-#                 break
-#             elif(game.board.white_fig_left == 0):
-#                 print("Blue won")
-#                 break
-#             # break  # przydalby sie jakiś komunikat kto wygrał zamiast break
-
-#         if not game.board.white_turn:
-#             # moves = game.board.get_possible_moves(not game.board.white_turn)
-#             # move = choice(moves)
-#             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH)
-#             game.board.make_ai_move(move)
-
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 is_running = False
-
-#             if event.type == pygame.MOUSEBUTTONDOWN:
-#                 pos = pygame.mouse.get_pos()
-#                 game.clicked_at(pos)
-
-#         game.update()
-
-#     pygame.quit()
-
 def main():
     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     is_running = True
@@ -550,22 +513,60 @@ def main():
                 print("Blue won")
                 break
             # break  # przydalby sie jakiś komunikat kto wygrał zamiast break
-        if game.board.white_turn:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'W')
-            game.board.make_ai_move(move)
-        else:
+
+        if not game.board.white_turn:
+            # moves = game.board.get_possible_moves(not game.board.white_turn)
+            # move = choice(moves)
             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'B')
             game.board.make_ai_move(move)
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         is_running = False
 
-        #     if event.type == pygame.MOUSEBUTTONDOWN:
-        #         pos = pygame.mouse.get_pos()
-        #         game.clicked_at(pos)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                is_running = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                game.clicked_at(pos)
 
         game.update()
 
     pygame.quit()
+
+# def main_ai_ai():
+#     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+#     is_running = True
+#     clock = pygame.time.Clock()
+#     game = Game(window)
+
+#     while is_running:
+#         clock.tick(FPS)
+
+#         if game.board.end():
+#             is_running = False
+
+#             if(game.board.blue_fig_left == 0):
+#                 print("White won")
+#                 break
+#             elif(game.board.white_fig_left == 0):
+#                 print("Blue won")
+#                 break
+#             # break  # przydalby sie jakiś komunikat kto wygrał zamiast break
+#         if game.board.white_turn:
+#             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'W')
+#             game.board.make_ai_move(move)
+#         else:
+#             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'B')
+#             game.board.make_ai_move(move)
+#         # for event in pygame.event.get():
+#         #     if event.type == pygame.QUIT:
+#         #         is_running = False
+
+#         #     if event.type == pygame.MOUSEBUTTONDOWN:
+#         #         pos = pygame.mouse.get_pos()
+#         #         game.clicked_at(pos)
+
+#         game.update()
+
+#     pygame.quit()
 
 main()
