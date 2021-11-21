@@ -30,8 +30,8 @@ FPS = 20
 
 MINIMAX_DEPTH = 5
 
-MINIMAX_BLUE_DEPTH = 6
-MINIMAX_WHITE_DEPTH = 3
+MINIMAX_BLUE_DEPTH = 5
+MINIMAX_WHITE_DEPTH = 5
 
 WIN_WIDTH = 800
 WIN_HEIGHT = 800
@@ -343,6 +343,36 @@ class Board:
                             white_eval += 1
         return blue_eval - white_eval
 
+    def evaluate_ver1(self):
+        blue_eval = 0
+        white_eval = 0
+        blue_min = (BOARD_WIDTH, BOARD_WIDTH)
+        blue_max = (0, 0)
+        white_min = (BOARD_WIDTH, BOARD_WIDTH)
+        white_max = (0, 0)
+        for row in range(BOARD_WIDTH):
+            for col in range((row+1) % 2, BOARD_WIDTH, 2):
+                if self.board[row][col].is_blue():
+                    blue_min = (min(blue_min[0], row), min(blue_min[1], col))
+                    blue_max = (max(blue_max[0], row), max(blue_max[1], col))
+                    if self.board[row][col].is_king():
+                        blue_eval += 10
+                    else:
+                        blue_eval += 1
+                elif self.board[row][col].is_white():
+                    white_min = (min(white_min[0], row), min(white_min[1], col))
+                    white_max = (max(white_max[0], row), max(white_max[1], col))
+                    if self.board[row][col].is_king():
+                        white_eval += 10
+                    else:
+                        white_eval += 1
+        white_area = (white_max[0] - white_min[0]) * (white_max[1] - white_min[1])
+        blue_area = (blue_max[0] - blue_min[0]) * (blue_max[1] - blue_min[1])
+        white_eval -= white_area // 3
+        blue_eval -= blue_area // 3
+        return blue_eval - white_eval
+
+
     def evaluate_ver2(self):
         blue_eval = 0
         white_eval = 0
@@ -616,10 +646,12 @@ def main_ai_ai():
                 break
 
         if game.board.white_turn:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_WHITE_DEPTH, False, "evaluate_ver0")
+            # white
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_WHITE_DEPTH, False, "evaluate_ver3")
             game.board.make_ai_move(move)
         else:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_BLUE_DEPTH, True, "evaluate_ver0")
+            # blue
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_BLUE_DEPTH, True, "evaluate_ver3")
             game.board.make_ai_move(move)
 
         iter += 1
