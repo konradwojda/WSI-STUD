@@ -26,12 +26,12 @@ from random import choice
 
 from typing import Type
 
-FPS = 20
+FPS = 5
 
 MINIMAX_DEPTH = 5
 
-MINIMAX_BLUE_DEPTH = 5
-MINIMAX_WHITE_DEPTH = 5
+MINIMAX_BLUE_DEPTH = 2
+MINIMAX_WHITE_DEPTH = 1
 
 WIN_WIDTH = 800
 WIN_HEIGHT = 800
@@ -597,12 +597,6 @@ def main():
             elif game.board.check_winner() == 1:
                 print("Blue won")
                 break
-        # if(game.board.blue_fig_left == 0 or len(game.board.get_possible_moves(True)) == 0):
-        #     print("White won")
-        #     break
-        # elif(game.board.white_fig_left == 0 or len(game.board.get_possible_moves(False)) == 0):
-        #     print("Blue won")
-        #     break
 
         if not game.board.white_turn:
             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, True, "evaluate_ver0")
@@ -647,11 +641,11 @@ def main_ai_ai():
 
         if game.board.white_turn:
             # white
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_WHITE_DEPTH, False, "evaluate_ver3")
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_WHITE_DEPTH, False, "evaluate_ver0")
             game.board.make_ai_move(move)
         else:
             # blue
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_BLUE_DEPTH, True, "evaluate_ver3")
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_BLUE_DEPTH, True, "evaluate_ver0")
             game.board.make_ai_move(move)
 
         iter += 1
