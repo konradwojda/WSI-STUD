@@ -30,6 +30,9 @@ FPS = 20
 
 MINIMAX_DEPTH = 5
 
+MINIMAX_BLUE_DEPTH = 5
+MINIMAX_WHITE_DEPTH = 5
+
 WIN_WIDTH = 800
 WIN_HEIGHT = 800
 
@@ -322,7 +325,7 @@ class Board:
         return pos_moves
 
     # ToDo
-    def evaluate(self, is_blue_turn):
+    def evaluate_ver0(self):
         blue_eval = 0
         white_eval = 0
         for row in range(BOARD_WIDTH):
@@ -340,7 +343,7 @@ class Board:
                             white_eval += 1
         return blue_eval - white_eval
 
-    def evaluate_ver2(self, is_blue_turn):
+    def evaluate_ver2(self):
         blue_eval = 0
         white_eval = 0
         for row in range(BOARD_WIDTH):
@@ -364,7 +367,7 @@ class Board:
                                 white_eval += 7
         return blue_eval - white_eval
 
-    def evaluate_ver3(self, is_blue_turn):
+    def evaluate_ver3(self):
         blue_eval = 0
         white_eval = 0
         for row in range(BOARD_WIDTH):
@@ -379,7 +382,7 @@ class Board:
                         if self.board[row][col].is_king():
                             white_eval += 10
                         else:
-                            white_eval += 5 + row
+                            white_eval += 5 + BOARD_WIDTH - row
         return blue_eval - white_eval
 
     def get_possible_moves(self, is_blue_turn):
@@ -492,33 +495,33 @@ class Game:
         self.board.clicked_at(row, col)
 
 
-def minimax_a_b(board, depth, color):
+def minimax_a_b(board, depth, move_max):
     # ToDo
     moves = board.get_possible_moves(not board.white_turn)
     moves_grades = []
     for move in moves:
         new_board = deepcopy(board)
         new_board.make_ai_move(move)
-        moves_grades.append(minimax_a_b_recurr(new_board, depth - 1, True, -inf, +inf, color))
+        moves_grades.append(minimax_a_b_recurr(new_board, depth - 1, not move_max, -inf, +inf))
     zipped_moves = list(zip(moves_grades, moves))
     print([elem[0] for elem in zipped_moves])
     # wywala sie jesli nie ma mozliwych ruchow
-    return max(zipped_moves, key= lambda x: x[0])[1]
+    if move_max:
+        return max(zipped_moves, key= lambda x: x[0])[1]
+    else:
+        return min(zipped_moves, key= lambda x: x[0])[1]
 
 
-def minimax_a_b_recurr(board, depth, move_max, a, b, color):
+def minimax_a_b_recurr(board, depth, move_max, a, b):
     # ToDo
     moves = board.get_possible_moves(not board.white_turn)
     if len(moves) == 0 or depth == 0:
-        if color == 'B':
-            return board.evaluate_ver2(not board.white_turn)
-        elif color == 'W':
-            return -board.evaluate_ver2(not board.white_turn)
+        return board.evaluate_ver0()
     if move_max:
         for move in moves:
             new_board = deepcopy(board)
             new_board.make_ai_move(move)
-            a = max(a, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b, color))
+            a = max(a, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b))
             if a >= b:
                 return b
         return a
@@ -526,7 +529,7 @@ def minimax_a_b_recurr(board, depth, move_max, a, b, color):
         for move in moves:
             new_board = deepcopy(board)
             new_board.make_ai_move(move)
-            b = min(b, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b, color))
+            b = min(b, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b))
             if a >= b:
                 return a
         return b
@@ -551,12 +554,9 @@ def main():
             elif(game.board.white_fig_left == 0 or len(game.board.get_possible_moves(False)) == 0):
                 print("Blue won")
                 break
-            # break  # przydalby sie jakiś komunikat kto wygrał zamiast break
 
         if not game.board.white_turn:
-            # moves = game.board.get_possible_moves(not game.board.white_turn)
-            # move = choice(moves)
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'B')
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, True)
             game.board.make_ai_move(move)
 
         for event in pygame.event.get():
@@ -594,20 +594,13 @@ def main_ai_ai():
             elif(game.board.white_fig_left == 0 or len(game.board.get_possible_moves(False)) == 0):
                 print("Blue won")
                 break
-            # break  # przydalby sie jakiś komunikat kto wygrał zamiast break
+
         if game.board.white_turn:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'W')
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_WHITE_DEPTH, False)
             game.board.make_ai_move(move)
         else:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, 'B')
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_BLUE_DEPTH, True)
             game.board.make_ai_move(move)
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         is_running = False
-
-        #     if event.type == pygame.MOUSEBUTTONDOWN:
-        #         pos = pygame.mouse.get_pos()
-        #         game.clicked_at(pos)
 
         iter += 1
         game.update()
