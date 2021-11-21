@@ -30,8 +30,8 @@ FPS = 20
 
 MINIMAX_DEPTH = 5
 
-MINIMAX_BLUE_DEPTH = 5
-MINIMAX_WHITE_DEPTH = 5
+MINIMAX_BLUE_DEPTH = 6
+MINIMAX_WHITE_DEPTH = 3
 
 WIN_WIDTH = 800
 WIN_HEIGHT = 800
@@ -437,6 +437,18 @@ class Board:
     def end(self):
         return self.white_fig_left == 0 or self.blue_fig_left == 0 or len(self.get_possible_moves(not self.white_turn)) == 0
 
+    def check_winner(self):
+        """
+        -1 if white won
+        1 if blue won
+        0 if no winner yet
+        """
+        if(self.blue_fig_left == 0 or len(self.get_possible_moves(True)) == 0):
+            return -1
+        elif(self.white_fig_left == 0 or len(self.get_possible_moves(False)) == 0):
+            return 1
+        return 0
+
     def clicked_at(self, row, col):
         field = self.board[row][col]
         if field.is_move_mark():
@@ -495,14 +507,14 @@ class Game:
         self.board.clicked_at(row, col)
 
 
-def minimax_a_b(board, depth, move_max):
+def minimax_a_b(board, depth, move_max, eval_func):
     # ToDo
     moves = board.get_possible_moves(not board.white_turn)
     moves_grades = []
     for move in moves:
         new_board = deepcopy(board)
         new_board.make_ai_move(move)
-        moves_grades.append(minimax_a_b_recurr(new_board, depth - 1, not move_max, -inf, +inf))
+        moves_grades.append(minimax_a_b_recurr(new_board, depth - 1, not move_max, -inf, +inf, eval_func))
     zipped_moves = list(zip(moves_grades, moves))
     print([elem[0] for elem in zipped_moves])
     # wywala sie jesli nie ma mozliwych ruchow
@@ -512,16 +524,17 @@ def minimax_a_b(board, depth, move_max):
         return min(zipped_moves, key= lambda x: x[0])[1]
 
 
-def minimax_a_b_recurr(board, depth, move_max, a, b):
+def minimax_a_b_recurr(board, depth, move_max, a, b, eval_func):
     # ToDo
     moves = board.get_possible_moves(not board.white_turn)
-    if len(moves) == 0 or depth == 0:
-        return board.evaluate_ver0()
+    winner_id = 1 if move_max else -1
+    if board.check_winner() == winner_id or depth == 0:
+        return getattr(board, eval_func)()
     if move_max:
         for move in moves:
             new_board = deepcopy(board)
             new_board.make_ai_move(move)
-            a = max(a, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b))
+            a = max(a, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b, eval_func))
             if a >= b:
                 return b
         return a
@@ -529,7 +542,7 @@ def minimax_a_b_recurr(board, depth, move_max, a, b):
         for move in moves:
             new_board = deepcopy(board)
             new_board.make_ai_move(move)
-            b = min(b, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b))
+            b = min(b, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b, eval_func))
             if a >= b:
                 return a
         return b
@@ -548,15 +561,21 @@ def main():
         if game.board.end():
             is_running = False
 
-            if(game.board.blue_fig_left == 0 or len(game.board.get_possible_moves(True)) == 0):
+            if game.board.check_winner() == -1:
                 print("White won")
                 break
-            elif(game.board.white_fig_left == 0 or len(game.board.get_possible_moves(False)) == 0):
+            elif game.board.check_winner() == 1:
                 print("Blue won")
                 break
+        # if(game.board.blue_fig_left == 0 or len(game.board.get_possible_moves(True)) == 0):
+        #     print("White won")
+        #     break
+        # elif(game.board.white_fig_left == 0 or len(game.board.get_possible_moves(False)) == 0):
+        #     print("Blue won")
+        #     break
 
         if not game.board.white_turn:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, True)
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, True, "evaluate_ver0")
             game.board.make_ai_move(move)
 
         for event in pygame.event.get():
@@ -577,8 +596,9 @@ def main_ai_ai():
     clock = pygame.time.Clock()
     game = Game(window)
 
+    iter = 0
     while is_running:
-        iter = 0
+
         clock.tick(FPS)
 
         if game.board.end() or iter > 200:
@@ -588,18 +608,18 @@ def main_ai_ai():
                 print("Draw")
                 break
 
-            if(game.board.blue_fig_left == 0 or len(game.board.get_possible_moves(True)) == 0):
+            if game.board.check_winner() == -1:
                 print("White won")
                 break
-            elif(game.board.white_fig_left == 0 or len(game.board.get_possible_moves(False)) == 0):
+            elif game.board.check_winner() == 1:
                 print("Blue won")
                 break
 
         if game.board.white_turn:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_WHITE_DEPTH, False)
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_WHITE_DEPTH, False, "evaluate_ver0")
             game.board.make_ai_move(move)
         else:
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_BLUE_DEPTH, True)
+            move = minimax_a_b(deepcopy(game.board), MINIMAX_BLUE_DEPTH, True, "evaluate_ver0")
             game.board.make_ai_move(move)
 
         iter += 1
