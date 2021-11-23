@@ -364,8 +364,7 @@ class Board:
                         white_eval += 10
                     else:
                         white_eval += 1
-        white_area = (white_max[0] - white_min[0]) * \
-            (white_max[1] - white_min[1])
+        white_area = (white_max[0] - white_min[0]) * (white_max[1] - white_min[1])
         blue_area = (blue_max[0] - blue_min[0]) * (blue_max[1] - blue_min[1])
         white_eval -= white_area // 3
         blue_eval -= blue_area // 3
@@ -655,4 +654,4 @@ def main_ai_ai():
     pygame.quit()
 
 
-main_ai_ai()
+main()

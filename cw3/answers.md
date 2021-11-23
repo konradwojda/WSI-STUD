@@ -1,5 +1,6 @@
 # Domyślne ustawienia i przyjęte funkcje ewaluacji
-Głębokość przeszukiwania: 5
+Głębokość przeszukiwania: 5  
+
 Heurystyki:
 
 ver0 - Za pion przyznajemy 1 punkt, za damkę 10 p.
@@ -14,15 +15,15 @@ ver3 - za każdy nasz pion otrzymuje się nagrodę w wysokości: (5 + numer wier
 
 ## Czy gracz sterowany przez AI zachowuje się rozsądnie z ludzkiego punktu widzenia? Jeśli nie to co jest nie tak?
 
-Przy podstawowych ustawieniach (depth = 5, ver0) sztuczna inteligencja zachowuje się rozsądnie, jednak ze względu na przyjętą heurystykę można zauwazyć dziwne zachowania np. zdobycie damki zamiast zbicie pionka.
+Przy podstawowych ustawieniach (depth = 5, ver0) sztuczna inteligencja zachowuje się rozsądnie, jednak ze względu na przyjętą heurystykę można zauwazyć dziwne zachowania np. zdobycie damki zamiast zbicia pionka lub unikanie zbicia pionka przeciwnika. 
+Z punktu widzenia człowieka to wydaje się nienaturalne, jednak wiedząc jak działa algorytm - zrozumiałe.
 Mimo to, ciężko jest pokonać taką sztuczną inteligencję.
 
 Jeśli patrzymy na rozgrywkę AI vs AI spora część ruchów jest dziwna.
 Oczywiście jest to spowodowane obranymi heurystykami.
 Zdarza się, że jeden z graczy  przesuwa wszystkie swoje pionki na przód blokując swoje ruchy i w konsekwencji przegrywając.
 W sytuacjach remisowych gracze wykonują na przemian te same ruchy damkami (przód - tył)
-zamiast spróbować innych. Zależy to od kolejności przeszkukiwania dostępnych ruchów.
-Jeśli funkcja oceny jest równa to wykonywany jest pierwszy ruch (funkcja max/min)
+zamiast spróbować innych.
 
 ## Wpływ głębokości przeszukiwań na wyniki
 
