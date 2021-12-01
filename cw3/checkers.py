@@ -17,14 +17,9 @@ Nalezy napisac funkcje minimax_a_b_recurr, minimax_a_b (woła funkcję rekurency
 Chętni mogą ulepszać mój kod (trzeba oznaczyć komentarzem co zostało zmienione), mogą również dodać obsługę bicia wielokrotnego i wymagania bicia. Mogą również wdrożyć reguły: https://en.wikipedia.org/wiki/Russian_draughts
 """
 
-import numpy as np
 import pygame
 from copy import deepcopy
 from math import inf
-
-from random import choice
-
-from typing import Type
 
 FPS = 5
 
@@ -57,6 +52,7 @@ class Move:
     Param captures is Pawn that we are going to eliminate.
     Param's piece type is Pawn
     """
+
     def __init__(self, piece, dest_row: int, dest_col: int, captures=None):
         self.piece = piece
         self.dest_row = dest_row
@@ -94,6 +90,7 @@ class PosMoveField(Field):
     """
     Possible move field
     """
+
     def __init__(self, is_white, window, row, col, board, row_from, col_from, pos_move):
         self.__is_white = is_white
         self.__is_marked = False
@@ -324,7 +321,6 @@ class Board:
                             Move(piece, new_row+dir_y, new_col+1, self.board[new_row][new_col]))
         return pos_moves
 
-    # ToDo
     def evaluate_ver0(self):
         blue_eval = 0
         white_eval = 0
@@ -360,8 +356,10 @@ class Board:
                     else:
                         blue_eval += 1
                 elif self.board[row][col].is_white():
-                    white_min = (min(white_min[0], row), min(white_min[1], col))
-                    white_max = (max(white_max[0], row), max(white_max[1], col))
+                    white_min = (min(white_min[0], row),
+                                 min(white_min[1], col))
+                    white_max = (max(white_max[0], row),
+                                 max(white_max[1], col))
                     if self.board[row][col].is_king():
                         white_eval += 10
                     else:
@@ -371,7 +369,6 @@ class Board:
         white_eval -= white_area // 3
         blue_eval -= blue_area // 3
         return blue_eval - white_eval
-
 
     def evaluate_ver2(self):
         blue_eval = 0
@@ -538,24 +535,22 @@ class Game:
 
 
 def minimax_a_b(board, depth, move_max, eval_func):
-    # ToDo
     moves = board.get_possible_moves(not board.white_turn)
     moves_grades = []
     for move in moves:
         new_board = deepcopy(board)
         new_board.make_ai_move(move)
-        moves_grades.append(minimax_a_b_recurr(new_board, depth - 1, not move_max, -inf, +inf, eval_func))
+        moves_grades.append(minimax_a_b_recurr(
+            new_board, depth - 1, not move_max, -inf, +inf, eval_func))
     zipped_moves = list(zip(moves_grades, moves))
     print([elem[0] for elem in zipped_moves])
-    # wywala sie jesli nie ma mozliwych ruchow
     if move_max:
-        return max(zipped_moves, key= lambda x: x[0])[1]
+        return max(zipped_moves, key=lambda x: x[0])[1]
     else:
-        return min(zipped_moves, key= lambda x: x[0])[1]
+        return min(zipped_moves, key=lambda x: x[0])[1]
 
 
 def minimax_a_b_recurr(board, depth, move_max, a, b, eval_func):
-    # ToDo
     moves = board.get_possible_moves(not board.white_turn)
     winner_id = 1 if move_max else -1
     if board.check_winner() == winner_id or depth == 0:
@@ -564,7 +559,8 @@ def minimax_a_b_recurr(board, depth, move_max, a, b, eval_func):
         for move in moves:
             new_board = deepcopy(board)
             new_board.make_ai_move(move)
-            a = max(a, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b, eval_func))
+            a = max(a, minimax_a_b_recurr(
+                new_board, depth - 1, not move_max, a, b, eval_func))
             if a >= b:
                 return b
         return a
@@ -572,11 +568,11 @@ def minimax_a_b_recurr(board, depth, move_max, a, b, eval_func):
         for move in moves:
             new_board = deepcopy(board)
             new_board.make_ai_move(move)
-            b = min(b, minimax_a_b_recurr(new_board, depth - 1, not move_max, a, b, eval_func))
+            b = min(b, minimax_a_b_recurr(
+                new_board, depth - 1, not move_max, a, b, eval_func))
             if a >= b:
                 return a
         return b
-
 
 
 def main():
@@ -615,6 +611,7 @@ def main():
 
     pygame.quit()
 
+
 def main_ai_ai():
     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     is_running = True
@@ -642,11 +639,13 @@ def main_ai_ai():
 
         if game.board.white_turn:
             # white
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_WHITE_DEPTH, False, "evaluate_ver0")
+            move = minimax_a_b(deepcopy(game.board),
+                               MINIMAX_WHITE_DEPTH, False, "evaluate_ver0")
             game.board.make_ai_move(move)
         else:
             # blue
-            move = minimax_a_b(deepcopy(game.board), MINIMAX_BLUE_DEPTH, True, "evaluate_ver0")
+            move = minimax_a_b(deepcopy(game.board),
+                               MINIMAX_BLUE_DEPTH, True, "evaluate_ver0")
             game.board.make_ai_move(move)
 
         iter += 1
