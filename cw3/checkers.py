@@ -599,6 +599,7 @@ def main():
                 break
 
         if not game.board.white_turn:
+            print(game.board.evaluate_ver0())
             move = minimax_a_b(deepcopy(game.board), MINIMAX_DEPTH, True, "evaluate_ver0")
             game.board.make_ai_move(move)
 
@@ -653,4 +654,4 @@ def main_ai_ai():
 
     pygame.quit()
 
-main_ai_ai()
+main()
