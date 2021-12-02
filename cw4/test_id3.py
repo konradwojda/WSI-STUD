@@ -2,6 +2,7 @@ from os import read
 from reader import read_from_file
 from id3 import *
 from random import shuffle
+from collections import Counter
 
 
 DATA_PATH = "cw4/data/breast-cancer.data"
@@ -18,14 +19,16 @@ def test_id3():
     # print("digraph {")
     # print(node.to_dot())
     # print("}")
+    success_list = []
     for pair in training_pairs:
         try:
             result = node.classify(pair.attributes)
             # print(result)
             # print(pair.class_)
-            print(pair.class_ == result)
+            success_list.append(pair.class_ == result)
         except KeyError:
-            print("*****cannot classify*****")
+            success_list.append("*****cannot classify*****")
+    print(Counter(success_list))
 
 
 if __name__ == "__main__":
