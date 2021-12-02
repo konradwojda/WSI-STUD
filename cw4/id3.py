@@ -107,13 +107,13 @@ def id3(pairs, attributes):
 if __name__ == "__main__":
     node = id3(
         [
-            TrainingPair("0", ["unused", "A", "1"]),
-            TrainingPair("1", ["unused", "B", "1"]),
-            TrainingPair("1", ["unused", "B", "2"]),
-            TrainingPair("0", ["unused", "B", "2"]),
-            TrainingPair("1", ["unused", "B", "3"]),
+            TrainingPair("0", ["A", "1"]),
+            TrainingPair("1", ["B", "1"]),
+            TrainingPair("1", ["B", "2"]),
+            TrainingPair("0", ["B", "2"]),
+            TrainingPair("1", ["B", "3"]),
         ],
-        set((1, 2))
+        set((0, 1))
     )
 
     print("digraph {")
