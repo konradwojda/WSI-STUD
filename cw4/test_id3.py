@@ -37,9 +37,9 @@ def test_id3():
                 mistake_matrix[1][1] += 1
         else:
             if expected == positives[DATA_SET]:
-                mistake_matrix[0][1] += 1
-            elif expected == negatives[DATA_SET]:
                 mistake_matrix[1][0] += 1
+            elif expected == negatives[DATA_SET]:
+                mistake_matrix[0][1] += 1
     print(Counter(success_list))
     print(mistake_matrix)
     print("Accuracy:")
