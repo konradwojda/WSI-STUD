@@ -1,74 +1,32 @@
 from math import log
 from collections import Counter
 
-class TrainingPair:
-    """
-    attributes - lista atrybutów
-    class_ - finalna decyzja wynikająca z atrybutów
-    """
+class TrainingSet:
     def __init__(self, class_ = None, attributes = None):
         self.attributes = attributes if attributes else []
         self.class_ = class_
 
 
 class Node:
-    """
-    attribute - number atrybutu, który opisuje węzeł
-    children - dict, który dla każdego z atrybutów ma przypisany węzeł
-    """
     def __init__(self, attribute=None, children=None):
         self.attribute = attribute
         self.children = children
 
     def classify(self, sample):
         if sample[self.attribute] in self.children:
-
             return self.children[sample[self.attribute]].classify(sample)
-
-        classes = [child.classify(sample) for child in self.children.values()]
-
-        class_counter = Counter(classes)
-
-        return class_counter.most_common(1)[0][0]
-
-    def to_dot(self) -> str:
-        self_name = f"node_{id(self)}"
-
-        # Create a node for the current node
-        x = f'  {self_name} [label="Split on attr {self.attribute}"];\n'
-
-        # Create all the edges
-        for edge_label, child in self.children.items():
-            # Add dot from the child (to get its definition before inserting the edge)
-            x += child.to_dot()
-
-            # Add the edge to the child
-            child_name = f"node_{id(child)}"
-            escaped_edge_label = edge_label.encode("unicode_escape") \
-                                           .decode("ascii") \
-                                           .replace('"', r'\"')
-            x += f'  {self_name} -> {child_name} [label="{escaped_edge_label}"];\n'
-
-        return x
-
+        else:
+            classes = [child.classify(sample) for child in self.children.values()]
+            class_counter = Counter(classes)
+            return class_counter.most_common(1)[0][0]
 
 
 class Leaf:
-    """
-    class_ - finalna decyzja
-    """
     def __init__(self, class__=None):
         self.class_ = class__
 
     def classify(self, sample):
         return self.class_
-
-
-    def to_dot(self) -> str:
-        class_escaped = self.class_.encode("unicode_escape") \
-                                   .decode("ascii") \
-                                   .replace('"', r'\"')
-        return f'  node_{id(self)} [shape=box, label="{class_escaped}"];\n'
 
 
 
@@ -115,16 +73,12 @@ def id3(pairs, attributes):
 if __name__ == "__main__":
     node = id3(
         [
-            TrainingPair("0", ["A", "1"]),
-            TrainingPair("1", ["B", "1"]),
-            TrainingPair("1", ["B", "2"]),
-            TrainingPair("0", ["B", "2"]),
-            TrainingPair("1", ["B", "3"]),
+            TrainingSet("0", ["A", "1"]),
+            TrainingSet("1", ["B", "1"]),
+            TrainingSet("1", ["B", "2"]),
+            TrainingSet("0", ["B", "2"]),
+            TrainingSet("1", ["B", "3"]),
         ],
         set((0, 1))
     )
-
-    print("digraph {")
-    print(node.to_dot())
-    print("}")
 
