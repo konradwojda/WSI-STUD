@@ -5,9 +5,9 @@ from collections import Counter
 import numpy as np
 
 
-DATA_PATH = "cw4/data/agaricus-lepiota.data"
+# DATA_PATH = "cw4/data/agaricus-lepiota.data"
 
-# DATA_PATH = "cw4/data/breast-cancer.data"
+DATA_PATH = "cw4/data/breast-cancer.data"
 data1_positive = 'e'
 data1_negative = 'p'
 
@@ -34,20 +34,22 @@ def test_id3():
             expected = pair.class_
             success_list.append(expected == result)
             if (expected == result):
-                if expected == data1_positive:
+                if expected == data2_positive:
                     mistake_matrix[0][0] += 1
-                elif expected == data1_negative:
+                elif expected == data2_negative:
                     mistake_matrix[1][1] += 1
             else:
-                if expected == data1_positive:
+                if expected == data2_positive:
                     mistake_matrix[0][1] += 1
-                elif expected == data1_negative:
+                elif expected == data2_negative:
                     mistake_matrix[1][0] += 1
         except KeyError as e:
             success_list.append("***cannot classify***")
             # print(e)
     print(Counter(success_list))
     print(mistake_matrix)
+    print("Accuracy:")
+    print((mistake_matrix[0][0] + mistake_matrix[1][1])/len(testing_pairs))
 
 if __name__ == "__main__":
     test_id3()

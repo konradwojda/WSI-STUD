@@ -21,7 +21,15 @@ class Node:
         self.children = children
 
     def classify(self, sample):
-        return self.children[sample[self.attribute]].classify(sample)
+        if sample[self.attribute] in self.children:
+
+            return self.children[sample[self.attribute]].classify(sample)
+
+        classes = [child.classify(sample) for child in self.children.values()]
+
+        class_counter = Counter(classes)
+
+        return class_counter.most_common(1)[0][0]
 
     def to_dot(self) -> str:
         self_name = f"node_{id(self)}"
