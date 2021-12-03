@@ -1,11 +1,18 @@
-from os import read
 from reader import read_from_file
-from id3 import *
+from id3 import id3
 from random import shuffle
 from collections import Counter
+import numpy as np
 
 
-DATA_PATH = "cw4/data/breast-cancer.data"
+DATA_PATH = "cw4/data/agaricus-lepiota.data"
+
+# DATA_PATH = "cw4/data/breast-cancer.data"
+data1_positive = 'e'
+data1_negative = 'p'
+
+data2_positive = 'recurrence-events'
+data2_negative = 'no-recurrence-events'
 
 
 def test_id3():
@@ -20,16 +27,27 @@ def test_id3():
     # print(node.to_dot())
     # print("}")
     success_list = []
-    for pair in training_pairs:
+    mistake_matrix = np.array([[0, 0], [0, 0]])
+    for pair in testing_pairs:
         try:
             result = node.classify(pair.attributes)
-            # print(result)
-            # print(pair.class_)
-            success_list.append(pair.class_ == result)
-        except KeyError:
-            success_list.append("*****cannot classify*****")
+            expected = pair.class_
+            success_list.append(expected == result)
+            if (expected == result):
+                if expected == data1_positive:
+                    mistake_matrix[0][0] += 1
+                elif expected == data1_negative:
+                    mistake_matrix[1][1] += 1
+            else:
+                if expected == data1_positive:
+                    mistake_matrix[0][1] += 1
+                elif expected == data1_negative:
+                    mistake_matrix[1][0] += 1
+        except KeyError as e:
+            success_list.append("***cannot classify***")
+            # print(e)
     print(Counter(success_list))
-
+    print(mistake_matrix)
 
 if __name__ == "__main__":
     test_id3()
