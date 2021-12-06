@@ -37,7 +37,7 @@ def divide_by_attr(pairs, attr, value):
 def entropy(pairs):
     classes = [pair.class_ for pair in pairs]
     possible_values = list(set(classes))
-    return -sum(classes.count(value) * log(classes.count(value)) for value in possible_values)
+    return -sum((classes.count(value) / len(classes)) * log(classes.count(value)/len(classes)) for value in possible_values)
 
 
 def divided_entropy(pairs, attr):

@@ -4,12 +4,12 @@
 
 | Predykcja / Klasa rzeczywista | Pozytywna | Negatywna |
 | ----------------------------- | --------- | --------- |
-| Pozytywna                     | 16        | 12        |
-| Negatywna                     | 21        | 66        |
+| Pozytywna                     | 15        | 28        |
+| Negatywna                     | 19        | 56        |
 
 ### Dokładność
 
-Dokładność wynosi około **70%**
+Dokładność wynosi około **63,5%**
 
 # Zbiór mushroom
 
