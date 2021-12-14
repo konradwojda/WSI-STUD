@@ -5,12 +5,12 @@ from collections import Counter
 import numpy as np
 
 
-# DATA_PATH = "cw4/data/agaricus-lepiota.data"
+DATA_PATH = "cw4/data/agaricus-lepiota.data"
 
-DATA_PATH = "cw4/data/breast-cancer.data"
+# DATA_PATH = "cw4/data/breast-cancer.data"
 
 # 0 for agaricus-lepiota, 1 for breast-cancer
-DATA_SET = 1
+DATA_SET = 0
 
 positives = ['e', 'recurrence-events']
 negatives = ['p', 'no-recurrence-events']
