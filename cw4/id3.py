@@ -1,8 +1,9 @@
 from math import log
 from collections import Counter
 
+
 class TrainingSet:
-    def __init__(self, class_ = None, attributes = None):
+    def __init__(self, class_=None, attributes=None):
         self.attributes = attributes if attributes else []
         self.class_ = class_
 
@@ -16,7 +17,8 @@ class Node:
         if sample[self.attribute] in self.children:
             return self.children[sample[self.attribute]].classify(sample)
         else:
-            classes = [child.classify(sample) for child in self.children.values()]
+            classes = [child.classify(sample)
+                       for child in self.children.values()]
             class_counter = Counter(classes)
             return class_counter.most_common(1)[0][0]
 
@@ -27,7 +29,6 @@ class Leaf:
 
     def classify(self, sample):
         return self.class_
-
 
 
 def divide_by_attr(pairs, attr, value):
@@ -61,24 +62,11 @@ def id3(pairs, attributes):
 
     possible_values = list({pair.attributes[best_attr] for pair in pairs})
 
-    divided = {value: divide_by_attr(pairs, best_attr, value) for value in possible_values}
+    divided = {value: divide_by_attr(pairs, best_attr, value)
+               for value in possible_values}
 
     new_attributes = attributes.copy()
     new_attributes.discard(best_attr)
 
     return Node(best_attr,
                 {attr: id3(new_pairs, new_attributes) for attr, new_pairs in divided.items()})
-
-
-if __name__ == "__main__":
-    node = id3(
-        [
-            TrainingSet("0", ["A", "1"]),
-            TrainingSet("1", ["B", "1"]),
-            TrainingSet("1", ["B", "2"]),
-            TrainingSet("0", ["B", "2"]),
-            TrainingSet("1", ["B", "3"]),
-        ],
-        set((0, 1))
-    )
-
