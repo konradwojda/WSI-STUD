@@ -6,13 +6,12 @@ environment = gym.make("FrozenLake-v1")
 
 
 def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: float, epsilon: float, min_epsilon: float, max_epsilon: float, decay_rate: float, gamma: float):
-    rewards = []
+    success_count = 0
 
     for episode in range(episodes):
         state = environment.reset()
         step = 0
         done = False
-        rewards_count = 0
 
         for step in range(max_steps):
             # Choose action
@@ -31,19 +30,20 @@ def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: f
                 (reward + gamma *
                  np.max(qtable[new_state, :]) - qtable[state, action])
 
-            rewards_count += reward
-
             state = new_state
 
+            if reward == 1.0:
+                assert done
+
             if done:
+                if reward == 1.0:
+                    success_count += 1
                 break
 
         epsilon = min_epsilon + (max_epsilon - min_epsilon) * \
             np.exp(-decay_rate * episode)
 
-        rewards.append(rewards_count)
-
-    return qtable, rewards
+    return qtable, success_count
 
 
 if __name__ == "__main__":
@@ -75,9 +75,9 @@ if __name__ == "__main__":
     qtable = np.zeros((environment.observation_space.n,
                       environment.action_space.n))
 
-    learned_qtable, rewards_after = q_learning(qtable, episodes, max_steps, learning_rate, epsilon, min_epsilon, max_epsilon, decay_rate, gamma)
+    learned_qtable, success_count = q_learning(qtable, episodes, max_steps, learning_rate, epsilon, min_epsilon, max_epsilon, decay_rate, gamma)
 
-    print(str(sum(rewards_after)/episodes * 100) + "%")
+    print(str((success_count/episodes) * 100) + "%")
 
     print(learned_qtable)
 
