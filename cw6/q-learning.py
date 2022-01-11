@@ -2,7 +2,7 @@ import numpy as np
 import gym
 import random
 
-environment = gym.make("FrozenLake-v1")
+environment = gym.make("FrozenLake8x8-v1")
 
 
 def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: float, epsilon: float, min_epsilon: float, max_epsilon: float, decay_rate: float, gamma: float):
@@ -49,16 +49,16 @@ def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: f
 if __name__ == "__main__":
 
     # Number of tries
-    episodes = 15000
+    episodes = 250000
 
     # Learning rate
     learning_rate = 0.8
 
     # Max steps per try
-    max_steps = 200
+    max_steps = 400
 
     # Discounting rate
-    gamma = 0.95
+    gamma = 0.9
 
     # Exploration rate
     epsilon = 1.0
@@ -67,45 +67,44 @@ if __name__ == "__main__":
     max_epsilon = 1.0
 
     # Minimum exploration probability
-    min_epsilon = 0.01
+    min_epsilon = 0.001
 
     # Decay rate for exploration prob
-    decay_rate = 0.005
+    decay_rate = 0.00005
 
     qtable = np.zeros((environment.observation_space.n,
-                      environment.action_space.n))
+                    environment.action_space.n))
 
     learned_qtable, success_count = q_learning(qtable, episodes, max_steps, learning_rate, epsilon, min_epsilon, max_epsilon, decay_rate, gamma)
 
-    print(str((success_count/episodes) * 100) + "%")
+    print(str(episodes) + "\t" + f'{((success_count/episodes) * 100):.6f}' + "%")
+        # print(learned_qtable)
 
-    print(learned_qtable)
+    environment.reset()
 
-    # environment.reset()
+    test_success_count = 0
 
-    # for episode in range(5):
-    #     state = environment.reset()
+    for episode in range(1000):
+        state = environment.reset()
 
-    #     step = 0
+        step = 0
 
-    #     done = False
+        done = False
 
-    #     print("*" * 20)
+        for step in range(200):
+            action = np.argmax(qtable[state, :])
 
-    #     print(f'EP: {episode}')
+            new_state, reward, done, info = environment.step(action)
 
-    #     for step in range(max_steps):
-    #         action = np.argmax(qtable[state, :])
+            if done:
 
-    #         new_state, reward, done, info = environment.step(action)
+                if reward == 1.0:
+                    test_success_count += 1
 
-    #         if done:
-    #             environment.render()
+                break
 
-    #             print(f'Number of steps: {step}')
+            state = new_state
 
-    #             break
+    environment.close()
 
-    #         state = new_state
-
-    # environment.close()
+    print(f'{((test_success_count/1000) * 100):.6f}' + "%")
