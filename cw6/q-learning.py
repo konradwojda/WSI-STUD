@@ -2,6 +2,12 @@ import numpy as np
 import gym
 import random
 
+from multiprocessing.pool import Pool
+
+from itertools import repeat
+
+from statistics import mean
+
 environment = gym.make("FrozenLake8x8-v1")
 
 
@@ -42,9 +48,7 @@ def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: f
 
     return qtable, success_count
 
-
-if __name__ == "__main__":
-
+def learn_and_test(episodes):
     # Number of tries
     # episodes = 1000
 
@@ -69,50 +73,51 @@ if __name__ == "__main__":
     # Decay rate for exploration prob
     decay_rate = 0.00005
 
-    #Start testing
-    for episodes in [1000, 5000, 10000, 50000, 100000, 250000]:
+    qtable = np.zeros((environment.observation_space.n,
+                    environment.action_space.n))
 
-        # Sum of success rates in 10 tries
-        sum_success_rate = 0
+    learned_qtable, success_count = q_learning(qtable, episodes, max_steps, learning_rate, epsilon, min_epsilon, max_epsilon, decay_rate, gamma)
 
-        for _ in range(10):
-            qtable = np.zeros((environment.observation_space.n,
-                            environment.action_space.n))
+    environment.reset()
 
-            learned_qtable, success_count = q_learning(qtable, episodes, max_steps, learning_rate, epsilon, min_epsilon, max_epsilon, decay_rate, gamma)
+    test_success_count = 0
 
-            # print(str(episodes) + "\t" + f'{((success_count/episodes) * 100):.6f}' + "%")
+    for episode in range(1000):
+        state = environment.reset()
 
-            environment.reset()
+        done = False
 
-            test_success_count = 0
+        for step in range(200):
+            action = np.argmax(qtable[state, :])
 
-            for episode in range(1000):
-                state = environment.reset()
+            new_state, reward, done, info = environment.step(action)
 
-                step = 0
+            if done:
 
-                done = False
+                if reward == 1.0:
+                    test_success_count += 1
 
-                for step in range(200):
-                    action = np.argmax(qtable[state, :])
+                break
 
-                    new_state, reward, done, info = environment.step(action)
+            state = new_state
 
-                    if done:
+    environment.close()
 
-                        if reward == 1.0:
-                            test_success_count += 1
+    return test_success_count/1000
 
-                        break
+if __name__ == "__main__":
 
-                    state = new_state
+    results = []
 
-            environment.close()
+    with Pool() as p:
+        #Start testing
+        for episodes in [1000, 5000, 10000, 50000, 100000, 250000]:
+                success_rates = p.imap_unordered(learn_and_test, repeat(episodes, 10))
 
-            sum_success_rate += test_success_count/1000
+                avg_success_rate = mean(success_rates)
 
-            # print(f'{((test_success_count/1000) * 100):.6f}' + "%")
+                results.append((avg_success_rate, episodes))
 
-        print("Nr of episodes: " + str(episodes))
-        print("Avg success rate: " + f'{((sum_success_rate/10) * 100):.6f}' + "%")
+    for sr, ep in results:
+        print("Nr of episodes: " + str(ep))
+        print("Avg success rate: " + f'{(sr * 100):.6f}' + "%")
