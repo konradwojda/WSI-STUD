@@ -6,11 +6,11 @@ environment = gym.make("FrozenLake8x8-v1")
 
 
 def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: float, epsilon: float, min_epsilon: float, max_epsilon: float, decay_rate: float, gamma: float):
+
     success_count = 0
 
     for episode in range(episodes):
         state = environment.reset()
-        step = 0
         done = False
 
         for step in range(max_steps):
@@ -32,9 +32,6 @@ def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: f
 
             state = new_state
 
-            if reward == 1.0:
-                assert done
-
             if done:
                 if reward == 1.0:
                     success_count += 1
@@ -49,7 +46,7 @@ def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: f
 if __name__ == "__main__":
 
     # Number of tries
-    episodes = 250000
+    # episodes = 1000
 
     # Learning rate
     learning_rate = 0.8
@@ -72,39 +69,50 @@ if __name__ == "__main__":
     # Decay rate for exploration prob
     decay_rate = 0.00005
 
-    qtable = np.zeros((environment.observation_space.n,
-                    environment.action_space.n))
+    #Start testing
+    for episodes in [1000, 5000, 10000, 50000, 100000, 250000]:
 
-    learned_qtable, success_count = q_learning(qtable, episodes, max_steps, learning_rate, epsilon, min_epsilon, max_epsilon, decay_rate, gamma)
+        # Sum of success rates in 10 tries
+        sum_success_rate = 0
 
-    print(str(episodes) + "\t" + f'{((success_count/episodes) * 100):.6f}' + "%")
-        # print(learned_qtable)
+        for _ in range(10):
+            qtable = np.zeros((environment.observation_space.n,
+                            environment.action_space.n))
 
-    environment.reset()
+            learned_qtable, success_count = q_learning(qtable, episodes, max_steps, learning_rate, epsilon, min_epsilon, max_epsilon, decay_rate, gamma)
 
-    test_success_count = 0
+            # print(str(episodes) + "\t" + f'{((success_count/episodes) * 100):.6f}' + "%")
 
-    for episode in range(1000):
-        state = environment.reset()
+            environment.reset()
 
-        step = 0
+            test_success_count = 0
 
-        done = False
+            for episode in range(1000):
+                state = environment.reset()
 
-        for step in range(200):
-            action = np.argmax(qtable[state, :])
+                step = 0
 
-            new_state, reward, done, info = environment.step(action)
+                done = False
 
-            if done:
+                for step in range(200):
+                    action = np.argmax(qtable[state, :])
 
-                if reward == 1.0:
-                    test_success_count += 1
+                    new_state, reward, done, info = environment.step(action)
 
-                break
+                    if done:
 
-            state = new_state
+                        if reward == 1.0:
+                            test_success_count += 1
 
-    environment.close()
+                        break
 
-    print(f'{((test_success_count/1000) * 100):.6f}' + "%")
+                    state = new_state
+
+            environment.close()
+
+            sum_success_rate += test_success_count/1000
+
+            # print(f'{((test_success_count/1000) * 100):.6f}' + "%")
+
+        print("Nr of episodes: " + str(episodes))
+        print("Avg success rate: " + f'{((sum_success_rate/10) * 100):.6f}' + "%")
