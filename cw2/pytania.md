@@ -53,5 +53,5 @@ Dla tego problemu najlepiej sprawuje się współczynnik mutacji z zakresu 0.5 -
 | 20            | 400.00000005370237 | 400.0000010372103  | 8.641617407617417e-07  | 400.00000334365524 |
 
 ### Wnioski:
-Ten parametr najmniej wpływa na wyniki. Jedynie brak elity lub jej zbyt duża wartość 
+Ten parametr najmniej wpływa na wyniki. Jedynie brak elity lub jej zbyt duża wartość
 jest najgorszym wyborem. Najlepsze wyniki uzyskałem dla elity równej 5.
