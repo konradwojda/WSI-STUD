@@ -2,6 +2,8 @@
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
     "cSpell.words": [
+        "epsilona",
         "qtable"
-    ]
+    ],
+    "cSpell.language": "en,pl,pl-PL"
 }
