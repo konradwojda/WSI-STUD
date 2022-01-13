@@ -25,7 +25,7 @@ Po nauczeniu się algorytmu badam średni procent dojścia do celu w 1000 epizod
 
 ### Domyślna funkcja nagrody
 
-| epizody | średni procent dojść do celu w 10 próbach |
+| epizody | średni procent dojść do celu              |
 | ------- | ----------------------------------------- |
 | 1000    | 2.160000%                                 |
 | 10000   | 8.350000%                                 |
@@ -35,7 +35,7 @@ Po nauczeniu się algorytmu badam średni procent dojścia do celu w 1000 epizod
 
 ### Funkcja nagrody 1 - jeśli wpadniemy w dziurę -1 punkt, 1 punkt za dojście do celu
 
-| epizody | średni procent dojść do celu w 10 próbach |
+| epizody | średni procent dojść do celu              |
 | ------- | ----------------------------------------- |
 | 1000    | 10.240000%                                |
 | 10000   | 14.650000%                                |
@@ -44,7 +44,7 @@ Po nauczeniu się algorytmu badam średni procent dojścia do celu w 1000 epizod
 
 ### Funkcja nagrody 2 - przy wpadnięciu do dziury -10 punktów, 5 punktów za dojście do celu, -1 punkt za stanięcie na bezpieczną część (ale nie cel)
 
-| epizody | średni procent dojść do celu w 10 próbach |
+| epizody | średni procent dojść do celu              |
 | ------- | ----------------------------------------- |
 | 1000    | 2.500000%                                 |
 | 10000   | 3.880000%                                 |
