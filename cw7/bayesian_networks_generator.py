@@ -36,6 +36,14 @@ def load_from_json(path):
         nodes.append(Node(name, dependents, prob_dict))
     return nodes
 
+def save_samples_to_file(path, samples):
+    with open(path, 'w') as fh:
+       for sample in samples:
+           nodes = str(sample)[1:-1].split(", ")
+           nodes.insert(0, nodes[-1])
+           nodes.pop()
+           fh.write(str(nodes)[1:-1] + "\n")
+
 
 
 def generate_sample(nodes):
@@ -74,8 +82,8 @@ if __name__ == "__main__":
     # ]
 
     nodes = load_from_json("cw7/nodes_structure.json")
-    samples = [generate_sample(nodes) for _ in range(100)]
-    for sample in samples:
-        print(sample)
-
+    samples = [generate_sample(nodes) for _ in range(5000)]
+    # for sample in samples:
+    #     print(sample)
+    save_samples_to_file("cw7/samples.data", samples)
 
