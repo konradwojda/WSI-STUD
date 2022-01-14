@@ -10,7 +10,7 @@ oraz słownik z prawdopodobieństwami.
 
 Lepiej możemy to zobaczyć w pliku `nodes_structure.json`
 
-Wszystkie prawdopodobieństwa podane są dla prawdopodobieństw zdarzenia "True", ponieważ przeciwne możemy obliczyć.
+Wszystkie prawdopodobieństwa podane są dla zdarzenia "True", ponieważ przeciwne możemy obliczyć.
 
 # Generowanie próbki
 
