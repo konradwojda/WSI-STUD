@@ -2,6 +2,12 @@ import json
 import random
 from typing import Counter
 
+numbers_of_samples = 5000
+
+path_to_json = "cw7/nodes_structure.json"
+
+output_path = "cw7/samples.data"
+
 class Node:
     def __init__(self, name, dependents=None, prob_dict=None):
         self.name = name
@@ -81,9 +87,9 @@ if __name__ == "__main__":
     #     Node("Ache", dependents=["Back"], prob_dict={(True,): 0.7, (False,): 0.1})
     # ]
 
-    nodes = load_from_json("cw7/nodes_structure.json")
-    samples = [generate_sample(nodes) for _ in range(5000)]
-    # for sample in samples:
-    #     print(sample)
-    save_samples_to_file("cw7/samples.data", samples)
+    nodes = load_from_json(path_to_json)
+
+    samples = [generate_sample(nodes) for _ in range(numbers_of_samples)]
+
+    save_samples_to_file(output_path, samples)
 
