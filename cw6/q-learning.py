@@ -37,7 +37,7 @@ def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: f
             if environment.desc[row, col] == b'H':
                 reward = -10
             elif environment.desc[row, col] == b'G':
-                reward = 5
+                reward = 10
                 success_count += 1
             else:
                 reward = -1
@@ -53,20 +53,20 @@ def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: f
             if done:
                 break
 
-        epsilon = min_epsilon + (max_epsilon - min_epsilon) * \
-            np.exp(-decay_rate * episode)
+        # epsilon = min_epsilon + (max_epsilon - min_epsilon) * \
+        #     np.exp(-decay_rate * episode)
 
     return qtable, success_count
 
 
 def learn_and_test(episodes):
-    learning_rate = 0.8
+    learning_rate = 0.1
 
     max_steps = 400
 
     gamma = 0.9
 
-    epsilon = 1.0
+    epsilon = 0.8
     max_epsilon = 1.0
     min_epsilon = 0.001
     decay_rate = 0.00005
@@ -111,9 +111,9 @@ if __name__ == "__main__":
 
     with Pool() as p:
         # Start testing
-        for episodes in [1000, 10000, 50000, 250000]:
+        for episodes in [1000, 5000, 10000, 50000]:
             success_rates = p.imap_unordered(
-                learn_and_test, repeat(episodes, 10))
+                learn_and_test, repeat(episodes, 5))
 
             avg_success_rate = mean(success_rates)
 
