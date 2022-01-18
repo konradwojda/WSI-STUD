@@ -1,12 +1,12 @@
 import json
 import random
-from typing import Counter
 
 numbers_of_samples = 5000
 
 path_to_json = "cw7/nodes_structure.json"
 
 output_path = "cw7/samples.data"
+
 
 class Node:
     def __init__(self, name, dependents=None, prob_dict=None):
@@ -42,14 +42,14 @@ def load_from_json(path):
         nodes.append(Node(name, dependents, prob_dict))
     return nodes
 
+
 def save_samples_to_file(path, samples):
     with open(path, 'w') as fh:
-       for sample in samples:
-           nodes = str(sample)[1:-1].split(", ")
-           nodes.insert(0, nodes[-1])
-           nodes.pop()
-           fh.write(str(nodes)[1:-1] + "\n")
-
+        for sample in samples:
+            nodes = str(sample)[1:-1].split(", ")
+            nodes.insert(0, nodes[-1])
+            nodes.pop()
+            fh.write(str(nodes)[1:-1] + "\n")
 
 
 def generate_sample(nodes):
@@ -69,7 +69,8 @@ def generate_sample(nodes):
                     active_list.append(True)
                 else:
                     active_list.append(False)
-            sample[node.name] = random.uniform(0, 1) < node.prob_dict[tuple(active_list)]
+            sample[node.name] = random.uniform(
+                0, 1) < node.prob_dict[tuple(active_list)]
 
     return sample
 
@@ -92,4 +93,3 @@ if __name__ == "__main__":
     samples = [generate_sample(nodes) for _ in range(numbers_of_samples)]
 
     save_samples_to_file(output_path, samples)
-
