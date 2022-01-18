@@ -76,17 +76,17 @@ def generate_sample(nodes):
 
 
 if __name__ == "__main__":
-    # nodes = [
-    #     Node("Chair", prob_dict={True: 0.8}),
-    #     Node("Sport", prob_dict={True: 0.02}),
-    #     Node("Back", dependents=["Chair", "Sport"], prob_dict={
-    #         (True, True): 0.9,
-    #         (True, False): 0.2,
-    #         (False, True): 0.9,
-    #         (False, False): 0.01
-    #     }),
-    #     Node("Ache", dependents=["Back"], prob_dict={(True,): 0.7, (False,): 0.1})
-    # ]
+    nodes_example = [
+        Node("Chair", prob_dict={True: 0.8}),
+        Node("Sport", prob_dict={True: 0.02}),
+        Node("Back", dependents=["Chair", "Sport"], prob_dict={
+            (True, True): 0.9,
+            (True, False): 0.2,
+            (False, True): 0.9,
+            (False, False): 0.01
+        }),
+        Node("Ache", dependents=["Back"], prob_dict={(True,): 0.7, (False,): 0.1})
+    ]
 
     nodes = load_from_json(path_to_json)
 

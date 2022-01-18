@@ -53,8 +53,8 @@ def q_learning(qtable: np.array, episodes: int, max_steps: int, learning_rate: f
             if done:
                 break
 
-        # epsilon = min_epsilon + (max_epsilon - min_epsilon) * \
-        #     np.exp(-decay_rate * episode)
+        epsilon = min_epsilon + (max_epsilon - min_epsilon) * \
+            np.exp(-decay_rate * episode)
 
     return qtable, success_count
 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         # Start testing
         for episodes in [1000, 5000, 10000, 50000]:
             success_rates = p.imap_unordered(
-                learn_and_test, repeat(episodes, 5))
+                learn_and_test, repeat(episodes, 10))
 
             avg_success_rate = mean(success_rates)
 
